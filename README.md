@@ -34,3 +34,5 @@ it('demonstrates this matcher`s usage', () => {
 ```
 
 The matcher takes one argument, which is the path to the file whose content should be matched.
+
+You should also [exclude the output files from Jest's wacher](https://jestjs.io/docs/en/configuration#watchpathignorepatterns-array-string) so that updating the snapshot doesn't re-run the tests again.
