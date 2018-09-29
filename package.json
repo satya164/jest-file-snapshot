@@ -1,0 +1,35 @@
+{
+  "name": "jest-file-snapshot",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [
+    "test",
+    "jest",
+    "snapshot"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satya164/jest-file-snapshot.git"
+  },
+  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
+  "scripts": {
+    "lint": "eslint .",
+    "precommit": "yarn lint"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "eslint": "^4.19.1",
+    "eslint-config-satya164": "^1.0.2",
+    "husky": "^0.14.3",
+    "prettier": "^1.13.5"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "jest-diff": "^23.6.0"
+  }
+}
