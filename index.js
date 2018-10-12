@@ -5,7 +5,7 @@ const path = require('path');
 const chalk = require('chalk');
 const diff = require('jest-diff');
 
-exports.toMatchFile = function toMatchFile(content, filename) {
+exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   const { isNot, snapshotState } = this;
 
   if (!filename) {
@@ -15,6 +15,14 @@ exports.toMatchFile = function toMatchFile(content, filename) {
   if (isNot) {
     throw new Error('You cannot use `.not` with `.toMatchFile`.');
   }
+
+  options = {
+    diff: {
+      expand: false,
+      contextLines: 5,
+      ...(options.diff || {}),
+    },
+  };
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
     return {
@@ -49,7 +57,7 @@ exports.toMatchFile = function toMatchFile(content, filename) {
           message: () =>
             `${chalk.red('Received content')} doesn't match ${chalk.green(
               path.basename(filename)
-            )}.\n\n${diff(content, output)}`,
+            )}.\n\n${diff(content, output, options.diff)}`,
         };
       }
     }
