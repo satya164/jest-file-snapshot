@@ -11,6 +11,7 @@
   "files": [
     "index.js"
   ],
+  "types": "./index.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
+    "@types/jest": "^23.3.5",
     "conventional-changelog-cli": "^2.0.5",
     "eslint": "^4.19.1",
     "eslint-config-satya164": "^1.0.2",
