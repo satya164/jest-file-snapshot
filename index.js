@@ -17,9 +17,11 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   }
 
   options = {
-    expand: false,
-    contextLines: 5,
-    ...options,
+    diff: {
+      expand: false,
+      contextLines: 5,
+      ...(options.diff || {}),
+    },
   };
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
@@ -55,7 +57,7 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
           message: () =>
             `${chalk.red('Received content')} doesn't match ${chalk.green(
               path.basename(filename)
-            )}.\n\n${diff(content, output, options)}`,
+            )}.\n\n${diff(content, output, options.diff)}`,
         };
       }
     }
