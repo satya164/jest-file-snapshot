@@ -11,6 +11,7 @@
   "files": [
     "index.js"
   ],
+  "types": "./index.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "release-it": "^7.6.1"
   },
   "dependencies": {
+    "@types/jest": "^23.3.5",
     "chalk": "^2.4.1",
     "jest-diff": "^23.6.0"
   }
