@@ -10,7 +10,7 @@ declare namespace jest {
   interface Matchers<R> {
     toMatchFile: (output: string, filename: string, options?: FileMatcherOptions) => void
   }
-   interface Expect {
+  interface Expect {
     toMatchFile: (output: string, filename: string, options?: FileMatcherOptions) => void
   }
 }
