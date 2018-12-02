@@ -12,3 +12,7 @@ it('matches content of file on disk with specified filename', () => {
 it('matches content of file on disk without filename', () => {
   expect(`# this is a another test`).toMatchFile();
 });
+
+it('works with .not', () => {
+  expect(`# this is a nice test`).not.toMatchFile();
+});

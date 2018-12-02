@@ -21,10 +21,6 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
     );
   }
 
-  if (isNot) {
-    throw new Error('You cannot use `.not` with `.toMatchFile`.');
-  }
-
   options = {
     diff: {
       expand: false,
@@ -50,32 +46,53 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   if (fs.existsSync(filename)) {
     const output = fs.readFileSync(filename, 'utf8');
 
-    if (output === content) {
-      return { pass: true, message: () => '' };
-    } else {
-      if (snapshotState._updateSnapshot === 'all') {
-        mkdirp.sync(path.dirname(filename));
-        fs.writeFileSync(filename, content);
-
-        snapshotState.updated++;
-
-        return { pass: true, message: () => '' };
+    if (isNot) {
+      if (output !== content) {
+        return { pass: false, message: () => '' };
       } else {
         snapshotState.unmatched++;
 
         return {
-          pass: false,
+          pass: true,
           message: () =>
-            `${chalk.red('Received content')} doesn't match ${chalk.green(
-              path.basename(filename)
-            )}.\n\n${diff(content, output, options.diff)}`,
+            `Expected received content ${chalk.red(
+              'to not match'
+            )} the file ${chalk.blue(path.basename(filename))}.`,
         };
+      }
+    } else {
+      if (output === content) {
+        return { pass: true, message: () => '' };
+      } else {
+        if (snapshotState._updateSnapshot === 'all') {
+          mkdirp.sync(path.dirname(filename));
+          fs.writeFileSync(filename, content);
+
+          snapshotState.updated++;
+
+          return { pass: true, message: () => '' };
+        } else {
+          snapshotState.unmatched++;
+
+          return {
+            pass: false,
+            message: () =>
+              `Received content ${chalk.red(
+                "doesn't match"
+              )} the file ${chalk.blue(path.basename(filename))}.\n\n${diff(
+                content,
+                output,
+                options.diff
+              )}`,
+          };
+        }
       }
     }
   } else {
     if (
-      snapshotState._updateSnapshot === 'new' ||
-      snapshotState._updateSnapshot === 'all'
+      !isNot &&
+      (snapshotState._updateSnapshot === 'new' ||
+        snapshotState._updateSnapshot === 'all')
     ) {
       mkdirp.sync(path.dirname(filename));
       fs.writeFileSync(filename, content);
@@ -87,7 +104,7 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
       snapshotState.unmatched++;
 
       return {
-        pass: false,
+        pass: true,
         message: () =>
           `The output file ${chalk.blue(
             path.basename(filename)
