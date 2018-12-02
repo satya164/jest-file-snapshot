@@ -8,10 +8,10 @@ declare type FileMatcherOptions = {
 
 declare namespace jest {
   interface Matchers<R> {
-    toMatchFile: (output: string, filename: string, options?: FileMatcherOptions) => void
+    toMatchFile: (output: string, filename?: string, options?: FileMatcherOptions) => void
   }
 
   interface Expect {
-    toMatchFile: (output: string, filename: string, options?: FileMatcherOptions) => void
+    toMatchFile: (output: string, filename?: string, options?: FileMatcherOptions) => void
   }
 }

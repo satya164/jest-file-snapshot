@@ -4,12 +4,21 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 const diff = require('jest-diff');
+const mkdirp = require('mkdirp');
+const filenamify = require('filenamify');
 
 exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   const { isNot, snapshotState } = this;
 
-  if (!filename) {
-    throw new Error('You need to pass a `filename` to `.toMatchFile`.');
+  if (filename === undefined) {
+    // If file name is not specified, generate one from the test title
+    filename = path.join(
+      path.dirname(this.testPath),
+      '__file_snapshots__',
+      `${filenamify(this.currentTestName, {
+        replacement: '-',
+      }).replace(/\s/g, '-')}-${this.assertionCalls}`
+    );
   }
 
   if (isNot) {
@@ -45,7 +54,9 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
       return { pass: true, message: () => '' };
     } else {
       if (snapshotState._updateSnapshot === 'all') {
+        mkdirp.sync(path.dirname(filename));
         fs.writeFileSync(filename, content);
+
         snapshotState.updated++;
 
         return { pass: true, message: () => '' };
@@ -63,7 +74,9 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
     }
   } else {
     if (snapshotState._updateSnapshot === 'all') {
+      mkdirp.sync(path.dirname(filename));
       fs.writeFileSync(filename, content);
+
       snapshotState.added++;
 
       return { pass: true, message: () => '' };
