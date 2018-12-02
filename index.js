@@ -73,7 +73,10 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
       }
     }
   } else {
-    if (snapshotState._updateSnapshot === 'all') {
+    if (
+      snapshotState._updateSnapshot === 'new' ||
+      snapshotState._updateSnapshot === 'all'
+    ) {
       mkdirp.sync(path.dirname(filename));
       fs.writeFileSync(filename, content);
 
