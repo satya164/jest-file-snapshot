@@ -22,14 +22,13 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   }
 
   options = {
-    diff: {
-      expand: false,
-      contextLines: 5,
-      ...(options.diff || {}),
-    },
+    // Options for jest-diff
+    diff: Object.assign({ expand: false, contextLines: 5 }, options.diff),
   };
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
+    // We're probably running in CI environment
+
     snapshotState.unmatched++;
 
     return {
@@ -37,9 +36,9 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
       message: () =>
         `New output file ${chalk.blue(
           path.basename(filename)
-        )} was ${chalk.bold.red(
-          'not written'
-        )}. The update flag must be explicitly passed to write a new snapshot.\n\n This is likely because this test is run in a ${chalk.blue(
+        )} was ${chalk.bold.red('not written')}.\n\n` +
+        'The update flag must be explicitly passed to write a new snapshot.\n\n' +
+        `This is likely because this test is run in a ${chalk.blue(
           'continuous integration (CI) environment'
         )} in which snapshots are not written by default.\n\n`,
     };
@@ -49,7 +48,10 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
     const output = fs.readFileSync(filename, 'utf8');
 
     if (isNot) {
+      // The matcher is being used with `.not`
+
       if (output !== content) {
+        // The value of `pass` is reversed when used with `.not`
         return { pass: false, message: () => '' };
       } else {
         snapshotState.unmatched++;
