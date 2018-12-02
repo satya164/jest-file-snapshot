@@ -30,16 +30,18 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   };
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
+    snapshotState.unmatched++;
+
     return {
-      pass: false,
+      pass: isNot,
       message: () =>
         `New output file ${chalk.blue(
           path.basename(filename)
         )} was ${chalk.bold.red(
           'not written'
-        )}. The update flag must be explicitly ` +
-        'passed to write a new snapshot.\n\n + This is likely because this test is run in a continuous ' +
-        'integration (CI) environment in which snapshots are not written by default.\n\n',
+        )}. The update flag must be explicitly passed to write a new snapshot.\n\n This is likely because this test is run in a ${chalk.blue(
+          'continuous integration (CI) environment'
+        )} in which snapshots are not written by default.\n\n`,
     };
   }
 
