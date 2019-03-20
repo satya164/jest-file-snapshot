@@ -2,16 +2,30 @@
 
 import { DiffOptions } from 'jest-diff';
 
-declare type FileMatcherOptions = {
-  diff: DiffOptions
+declare module 'jest-file-snapshot' {
+  export const toMatchFile: jest.CustomMatcher;
 }
 
-declare namespace jest {
-  interface Matchers<R> {
-    toMatchFile: (output: string, filename?: string, options?: FileMatcherOptions) => void
-  }
+declare interface FileMatcherOptions {
+  diff: DiffOptions;
+}
 
-  interface Expect {
-    toMatchFile: (output: string, filename?: string, options?: FileMatcherOptions) => void
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toMatchFile: (
+        output: string,
+        filename?: string,
+        options?: FileMatcherOptions
+      ) => void;
+    }
+
+    interface Expect {
+      toMatchFile: (
+        output: string,
+        filename?: string,
+        options?: FileMatcherOptions
+      ) => void;
+    }
   }
 }
