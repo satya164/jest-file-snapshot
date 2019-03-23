@@ -1,0 +1,48 @@
+version: 2.1
+job_configuration: &job_configuration
+  docker:
+    - image: circleci/node:10-stretch
+  working_directory: ~/repo
+jobs:
+  test:
+    <<: *job_configuration
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "package.json" }}
+            - v3-dependencies-
+      - run: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - node_modules
+          key: v3-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run tests
+          command: yarn test
+  lint:
+    <<: *job_configuration
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "package.json" }}
+            - v3-dependencies-
+      - run: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - node_modules
+          key: v3-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: ESLint
+          command: |
+            yarn lint
+      - run:
+          name: Prettier (needed for TS files)
+          command: |
+            yarn prettier --list-different "**/*.js" "**/*.ts"
+workflows:
+  test:
+    jobs:
+      - test
+      - lint
