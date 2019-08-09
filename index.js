@@ -23,7 +23,14 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
 
   options = {
     // Options for jest-diff
-    diff: Object.assign({ expand: false, contextLines: 5 }, options.diff),
+    diff: Object.assign(
+      {
+        expand: false,
+        contextLines: 5,
+        aAnnotation: 'Snapshot',
+      },
+      options.diff
+    ),
   };
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
@@ -84,8 +91,8 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
               `Received content ${chalk.red(
                 "doesn't match"
               )} the file ${chalk.blue(path.basename(filename))}.\n\n${diff(
-                content,
                 output,
+                content,
                 options.diff
               )}`,
           };
