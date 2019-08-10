@@ -1,6 +1,6 @@
 {
   "name": "jest-file-snapshot",
-  "version": "0.0.0",
+  "version": "0.3.6",
   "description": "",
   "keywords": [
     "test",
@@ -28,21 +28,22 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@types/jest": "^23.3.10",
-    "@types/jest-diff": "^20.0.0",
-    "conventional-changelog-cli": "^2.0.11",
-    "eslint": "^5.9.0",
-    "eslint-config-satya164": "^2.0.1",
-    "husky": "^1.2.0",
-    "jest": "^23.6.0",
-    "prettier": "^1.15.3",
-    "release-it": "^8.2.0"
+    "@babel/core": "^7.5.5",
+    "@release-it/conventional-changelog": "^1.1.0",
+    "@types/jest": "^24.0.17",
+    "@types/jest-diff": "^20.0.1",
+    "conventional-changelog-cli": "^2.0.23",
+    "eslint": "^6.1.0",
+    "eslint-config-satya164": "^2.4.1",
+    "husky": "^3.0.3",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "release-it": "^12.3.5"
   },
   "dependencies": {
-    "chalk": "^2.4.1",
-    "filenamify": "^2.1.0",
-    "jest-diff": "^23.6.0",
+    "chalk": "^2.4.2",
+    "filenamify": "^4.1.0",
+    "jest-diff": "^24.8.0",
     "mkdirp": "^0.5.1"
   },
   "jest": {
