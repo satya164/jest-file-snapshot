@@ -12,7 +12,7 @@ declare interface FileMatcherOptions {
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       toMatchFile: (
         output: string,
         filename?: string,
