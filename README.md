@@ -27,10 +27,12 @@ expect.extend({ toMatchFile });
 Then use it in your tests:
 
 ```js
-it("matches content of file on disk", () => {
+it('matches content of file on disk', () => {
   expect(content).toMatchFile();
 });
 ```
+
+The content passed can be of type String or a Buffer. Only if the Buffer is holding binary data, will the comparison be done using Buffer.equals() instead of ===.
 
 The matcher takes two optional arguments:
 

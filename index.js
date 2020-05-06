@@ -6,9 +6,11 @@ const chalk = require('chalk');
 const diff = require('jest-diff');
 const mkdirp = require('mkdirp');
 const filenamify = require('filenamify');
+const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
 exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   const { isNot, snapshotState } = this;
+  const isBinary = Buffer.isBuffer(content) && isBinaryFileSync(content);
 
   if (filename === undefined) {
     // If file name is not specified, generate one from the test title
@@ -21,17 +23,19 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
     );
   }
 
-  options = {
-    // Options for jest-diff
-    diff: Object.assign(
-      {
-        expand: false,
-        contextLines: 5,
-        aAnnotation: 'Snapshot',
-      },
-      options.diff
-    ),
-  };
+  if (!isBinary) {
+    options = {
+      // Options for jest-diff
+      diff: Object.assign(
+        {
+          expand: false,
+          contextLines: 5,
+          aAnnotation: 'Snapshot',
+        },
+        options.diff
+      ),
+    };
+  }
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
     // We're probably running in CI environment
@@ -52,12 +56,12 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
   }
 
   if (fs.existsSync(filename)) {
-    const output = fs.readFileSync(filename, 'utf8');
+    const output = fs.readFileSync(filename, isBinary ? null : 'utf8');
 
     if (isNot) {
       // The matcher is being used with `.not`
 
-      if (output !== content) {
+      if (!(isBinary ? content.equals(output) : output === content)) {
         // The value of `pass` is reversed when used with `.not`
         return { pass: false, message: () => '' };
       } else {
@@ -72,7 +76,7 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
         };
       }
     } else {
-      if (output === content) {
+      if (isBinary ? content.equals(output) : output === content) {
         return { pass: true, message: () => '' };
       } else {
         if (snapshotState._updateSnapshot === 'all') {
@@ -85,16 +89,17 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
         } else {
           snapshotState.unmatched++;
 
+          let difference = '';
+          if (!isBinary) {
+            difference = `\n\n${diff(output, content, options.diff)}`;
+          }
+
           return {
             pass: false,
             message: () =>
               `Received content ${chalk.red(
                 "doesn't match"
-              )} the file ${chalk.blue(path.basename(filename))}.\n\n${diff(
-                output,
-                content,
-                options.diff
-              )}`,
+              )} the file ${chalk.blue(path.basename(filename))}.${difference}`,
           };
         }
       }
