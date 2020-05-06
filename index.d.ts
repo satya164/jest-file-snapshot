@@ -7,7 +7,7 @@ declare module 'jest-file-snapshot' {
 }
 
 declare interface FileMatcherOptions {
-  diff: DiffOptions;
+  diff?: DiffOptions;
 }
 
 declare global {
@@ -15,7 +15,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Matchers<R, T> {
       toMatchFile: (
-        output: string,
+        output: string | Buffer,
         filename?: string,
         options?: FileMatcherOptions
       ) => void;
@@ -23,7 +23,7 @@ declare global {
 
     interface Expect {
       toMatchFile: (
-        output: string,
+        output: string | Buffer,
         filename?: string,
         options?: FileMatcherOptions
       ) => void;

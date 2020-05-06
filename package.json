@@ -44,6 +44,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "filenamify": "^4.2.0",
+    "isbinaryfile": "^4.0.6",
     "jest-diff": "^26.6.1",
     "mkdirp": "^1.0.4"
   },

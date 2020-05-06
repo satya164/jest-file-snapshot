@@ -1,6 +1,6 @@
 # jest-file-snapshot
 
-Jest matcher to write snapshots to a separate file instead of the default snapshot file used by Jest. Writing a snapshot to a separate file means you have proper syntax highlighting in the output file, and better readability without those pesky escape characters.
+Jest matcher to write snapshots to a separate file instead of the default snapshot file used by Jest. Writing a snapshot to a separate file means you have proper syntax highlighting in the output file, and better readability without those pesky escape characters. It's also useful if you have binary content.
 
 ## Installation
 
@@ -27,10 +27,12 @@ expect.extend({ toMatchFile });
 Then use it in your tests:
 
 ```js
-it("matches content of file on disk", () => {
+it('matches content of file on disk', () => {
   expect(content).toMatchFile();
 });
 ```
+
+The content passed can be of type `string` or a `Buffer`. The comparison be done using `Buffer.equals()` instead of `===` if the `Buffer` is holding binary data.
 
 The matcher takes two optional arguments:
 
