@@ -1,5 +1,5 @@
 {
-  "name": "jest-file-snapshot",
+  "name": "@researchgate/jest-file-snapshot",
   "version": "0.3.8",
   "description": "",
   "keywords": [
