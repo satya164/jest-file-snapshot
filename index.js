@@ -3,25 +3,42 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
-const diff = require('jest-diff');
+const diff = require('jest-diff').default;
 const mkdirp = require('mkdirp');
 const filenamify = require('filenamify');
-const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
-exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
+/**
+ * Check if 2 strings or buffer are equal
+ * @param {string | Buffer} a
+ * @param {string | Buffer} b
+ */
+const isEqual = (a, b) => {
+  // @ts-ignore: TypeScript gives error if we pass string to buffer.equals
+  return Buffer.isBuffer(a) ? a.equals(b) : a === b;
+};
+
+/**
+ * Match given content against content of the specified file.
+ *
+ * @param {string | Buffer} content Output content to match
+ * @param {string} [filepath] Path to the file to match against
+ * @param {{ diff?: import('jest-diff').DiffOptions }} options Additional options for matching
+ * @this {{ testPath: string, currentTestName: string, assertionCalls: number, isNot: boolean, snapshotState: { added: number, updated: number, unmatched: number, _updateSnapshot: 'none' | 'new' | 'all' } }}
+ */
+exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
   const { isNot, snapshotState } = this;
-  const isBinary = Buffer.isBuffer(content) && isBinaryFileSync(content);
 
-  if (filename === undefined) {
-    // If file name is not specified, generate one from the test title
-    filename = path.join(
-      path.dirname(this.testPath),
-      '__file_snapshots__',
-      `${filenamify(this.currentTestName, {
-        replacement: '-',
-      }).replace(/\s/g, '-')}-${this.assertionCalls}`
-    );
-  }
+  const filename =
+    filepath === undefined
+      ? // If file name is not specified, generate one from the test title
+        path.join(
+          path.dirname(this.testPath),
+          '__file_snapshots__',
+          `${filenamify(this.currentTestName, {
+            replacement: '-',
+          }).replace(/\s/g, '-')}-${this.assertionCalls}`
+        )
+      : filepath;
 
   options = {
     // Options for jest-diff
@@ -53,10 +70,11 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
     };
   }
 
-  const isEqual = (a, b) => (isBinary ? a.equals(b) : a === b);
-
   if (fs.existsSync(filename)) {
-    const output = fs.readFileSync(filename, isBinary ? null : 'utf8');
+    const output = fs.readFileSync(
+      filename,
+      Buffer.isBuffer(content) ? null : 'utf8'
+    );
 
     if (isNot) {
       // The matcher is being used with `.not`
@@ -89,9 +107,10 @@ exports.toMatchFile = function toMatchFile(content, filename, options = {}) {
         } else {
           snapshotState.unmatched++;
 
-          const difference = isBinary
-            ? ''
-            : `\n\n${diff(output, content, options.diff)}`;
+          const difference =
+            Buffer.isBuffer(content) || Buffer.isBuffer(output)
+              ? ''
+              : `\n\n${diff(output, content, options.diff)}`;
 
           return {
             pass: false,

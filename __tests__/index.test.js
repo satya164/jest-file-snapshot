@@ -20,8 +20,8 @@ it('matches binary content of file on disk', () => {
   ).toMatchFile();
 });
 
-it('does not work with non-binary buffer content', () => {
-  expect(new Buffer('# this is a buffer test')).not.toMatchFile();
+it('works with non-binary buffer content', () => {
+  expect(new Buffer('# this is a buffer test')).toMatchFile();
 });
 
 it('works with .not', () => {

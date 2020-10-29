@@ -32,7 +32,7 @@ it('matches content of file on disk', () => {
 });
 ```
 
-The content passed can be of type `string` or a `Buffer`. The comparison be done using `Buffer.equals()` instead of `===` if the `Buffer` is holding binary data.
+The content passed can be of type `string` or a `Buffer`. The comparison be done using `Buffer.equals()` instead of `===` if a `Buffer` is passed.
 
 The matcher takes two optional arguments:
 

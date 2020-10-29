@@ -35,7 +35,7 @@ jobs:
           root: .
           paths: .
 
-  lint:
+  lint-and-typecheck:
     executor: default
     steps:
       - attach_project
@@ -46,8 +46,12 @@ jobs:
           name: Prettier (for TS files)
           command: |
             yarn prettier --list-different "**/*.js" "**/*.ts"
+      - run:
+          name: Typecheck files
+          command: |
+            yarn typescript
 
-  test:
+  unit-tests:
     executor: default
     steps:
       - attach_project
@@ -64,9 +68,10 @@ jobs:
 workflows:
   lint-and-test:
     jobs:
-      - lint:
+      - install-dependencies
+      - lint-and-typecheck:
           requires:
             - install-dependencies
-      - test:
+      - unit-tests:
           requires:
             - install-dependencies
