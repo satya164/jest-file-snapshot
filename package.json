@@ -34,6 +34,7 @@
     "@types/jest": "^26.0.15",
     "@types/jest-diff": "^24.3.0",
     "@types/mkdirp": "^1.0.1",
+    "codecov": "^3.8.0",
     "conventional-changelog-cli": "^2.1.0",
     "eslint": "^7.12.1",
     "eslint-config-satya164": "^3.1.8",
