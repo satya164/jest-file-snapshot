@@ -1,48 +1,72 @@
 version: 2.1
-job_configuration: &job_configuration
-  docker:
-    - image: circleci/node:10-stretch
-  working_directory: ~/repo
+
+executors:
+  default:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/project
+    environment:
+      YARN_CACHE_FOLDER: "~/.cache/yarn"
+
+commands:
+  attach_project:
+    steps:
+      - attach_workspace:
+          at: ~/project
+
 jobs:
-  test:
-    <<: *job_configuration
+  install-dependencies:
+    executor: default
     steps:
       - checkout
+      - attach_project
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}
-            - v3-dependencies-
-      - run: yarn install --frozen-lockfile
-      - save_cache:
-          paths:
-            - node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
       - run:
-          name: Run tests
-          command: yarn test
+          name: Install project dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths: ~/.cache/yarn
+      - persist_to_workspace:
+          root: .
+          paths: .
+
   lint:
-    <<: *job_configuration
+    executor: default
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v3-dependencies-{{ checksum "package.json" }}
-            - v3-dependencies-
-      - run: yarn install --frozen-lockfile
-      - save_cache:
-          paths:
-            - node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}
+      - attach_project
       - run:
-          name: ESLint
-          command: |
-            yarn lint
+          name: Lint files
+          command: yarn lint
       - run:
-          name: Prettier (needed for TS files)
+          name: Prettier (for TS files)
           command: |
             yarn prettier --list-different "**/*.js" "**/*.ts"
-workflows:
+
   test:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Run unit tests
+          command: yarn test --maxWorkers=2 --coverage
+      - run:
+          name: Upload test coverage
+          command: yarn codecov
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+
+workflows:
+  lint-and-test:
     jobs:
-      - test
-      - lint
+      - lint:
+          requires:
+            - install-dependencies
+      - test:
+          requires:
+            - install-dependencies
