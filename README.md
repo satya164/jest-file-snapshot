@@ -77,7 +77,7 @@ yarn lint -- --fix
 
 <!-- badges -->
 
-[build-badge]: https://img.shields.io/circleci/project/github/satya164/jest-file-snapshot/master.svg?style=flat-square
+[build-badge]: https://img.shields.io/circleci/project/github/satya164/jest-file-snapshot/main.svg?style=flat-square
 [build]: https://circleci.com/gh/satya164/jest-file-snapshot
 [coverage-badge]: https://img.shields.io/codecov/c/github/satya164/jest-file-snapshot.svg?style=flat-square
 [coverage]: https://codecov.io/github/satya164/jest-file-snapshot
