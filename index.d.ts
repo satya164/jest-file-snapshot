@@ -6,7 +6,7 @@ export const toMatchFile: (
   content: string | Buffer,
   filename?: string,
   options?: FileMatcherOptions
-) => CustomMatcherResult;
+) => jest.CustomMatcherResult;
 
 declare interface FileMatcherOptions {
   diff?: DiffOptions;
