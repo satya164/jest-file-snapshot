@@ -46,7 +46,7 @@ The matcher takes two optional arguments:
   - `diff`: options for [`jest-diff`](https://github.com/facebook/jest/tree/master/packages/jest-diff)
   - `fileExtension`: if no `filepath` is supplied, this will be added to the auto-generated filepath. Example: `.md`.
 
-You can supply default options (for a given jest context) by extending with `toMatchFileUsing`, for example:
+You can supply default options (for a given jest test file) by extending with `toMatchFileUsing`, for example:
 
 ```js
 import { toMatchFileUsing } from 'jest-file-snapshot';
