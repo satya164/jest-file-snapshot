@@ -14,6 +14,12 @@ it('matches content of file on disk without filename', () => {
   expect(`# this is a another test`).toMatchFile();
 });
 
+it('matches content of file on disk with file extension', () => {
+  expect(`# this is a markdown test`).toMatchFile(undefined, {
+    fileExtension: '.md',
+  });
+});
+
 it('matches binary content of file on disk', () => {
   expect(
     fs.readFileSync(path.join(__dirname, 'minimal.pdf'), 'binary')

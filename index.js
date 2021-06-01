@@ -22,23 +22,11 @@ const isEqual = (a, b) => {
  *
  * @param {string | Buffer} content Output content to match
  * @param {string} [filepath] Path to the file to match against
- * @param {{ diff?: import('jest-diff').DiffOptions }} options Additional options for matching
+ * @param {{ diff?: import('jest-diff').DiffOptions, fileExtension?: string }} options Additional options for matching
  * @this {{ testPath: string, currentTestName: string, assertionCalls: number, isNot: boolean, snapshotState: { added: number, updated: number, unmatched: number, _updateSnapshot: 'none' | 'new' | 'all' } }}
  */
 exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
   const { isNot, snapshotState } = this;
-
-  const filename =
-    filepath === undefined
-      ? // If file name is not specified, generate one from the test title
-        path.join(
-          path.dirname(this.testPath),
-          '__file_snapshots__',
-          `${filenamify(this.currentTestName, {
-            replacement: '-',
-          }).replace(/\s/g, '-')}-${this.assertionCalls}`
-        )
-      : filepath;
 
   options = {
     // Options for jest-diff
@@ -50,7 +38,22 @@ exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
       },
       options.diff
     ),
+    fileExtension: options.fileExtension,
   };
+
+  const filename =
+    filepath === undefined
+      ? // If file name is not specified, generate one from the test title
+        path.join(
+          path.dirname(this.testPath),
+          '__file_snapshots__',
+          `${filenamify(this.currentTestName, {
+            replacement: '-',
+          }).replace(/\s/g, '-')}-${this.assertionCalls}${
+            options.fileExtension || ''
+          }`
+        )
+      : filepath;
 
   if (snapshotState._updateSnapshot === 'none' && !fs.existsSync(filename)) {
     // We're probably running in CI environment
@@ -146,4 +149,27 @@ exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
       };
     }
   }
+};
+
+/**
+ * Supply defaults for toMatchFile
+ * @param {{ diff: import('jest-diff').DiffOptions, fileExtension?: string }} defaults Additional options for matching
+ */
+exports.toMatchFileUsing = function (defaults) {
+  /**
+   * Match given content against content of the specified file.
+   *
+   * @param {string | Buffer} content Output content to match
+   * @param {string} [filepath] Path to the file to match against
+   * @param {{ diff?: import('jest-diff').DiffOptions, fileExtension?: string }} options Additional options for matching
+   * @this {{ testPath: string, currentTestName: string, assertionCalls: number, isNot: boolean, snapshotState: { added: number, updated: number, unmatched: number, _updateSnapshot: 'none' | 'new' | 'all' } }}
+   */
+  const wrapped = function (content, filepath, options = {}) {
+    return exports.toMatchFile.call(this, content, filepath, {
+      ...defaults,
+      ...options,
+    });
+  };
+
+  return wrapped;
 };

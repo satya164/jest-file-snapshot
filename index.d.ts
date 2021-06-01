@@ -8,8 +8,11 @@ export const toMatchFile: (
   options?: FileMatcherOptions
 ) => CustomMatcherResult;
 
+export const toMatchFileUsing: (options: FileMatcherOptions) => toMatchFile;
+
 declare interface FileMatcherOptions {
   diff?: DiffOptions;
+  fileExtension?: string;
 }
 
 declare global {
