@@ -44,6 +44,15 @@ The matcher takes two optional arguments:
 - `filepath`: path to the file whose content should be matched, e.g. `expect(content).toMatchFile(path.join(__dirname, 'output.md'))`
 - `options`: additional options object for the matcher, with following properties:
   - `diff`: options for [`jest-diff`](https://github.com/facebook/jest/tree/master/packages/jest-diff)
+  - `fileExtension`: if no `filepath` is supplied, this will be added to the auto-generated filepath. Example: `.md`.
+
+You can supply default options (for a given jest context) by extending with `toMatchFileUsing`, for example:
+
+```js
+import { toMatchFileUsing } from 'jest-file-snapshot';
+
+expect.extend({ toMatchFile: toMatchFileUsing({ fileExtension: '.md' }) });
+```
 
 You should also [exclude the output files from Jest's watcher](https://jestjs.io/docs/en/configuration#watchpathignorepatterns-array-string) so that updating the snapshot doesn't re-run the tests again.
 
