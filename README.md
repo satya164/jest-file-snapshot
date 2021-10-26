@@ -45,7 +45,7 @@ The matcher takes two optional arguments:
 - `options`: additional options object for the matcher, with following properties:
   - `diff`: options for [`jest-diff`](https://github.com/facebook/jest/tree/master/packages/jest-diff)
 
-You should also [exclude the output files from Jest's watcher](https://jestjs.io/docs/configuration#watchpathignorepatterns-arraystring) so that updating the snapshot doesn't re-run the tests again.
+You should also [exclude the output files from Jest's watcher](https://jestjs.io/docs/en/configuration#watchpathignorepatterns-arraystring) so that updating the snapshot doesn't re-run the tests again.
 
 For example, by default `toMatchFile` uses a folder named `__file_snapshots__` which you can exclude by adding the following under the `jest` key in `package.json`:
 
