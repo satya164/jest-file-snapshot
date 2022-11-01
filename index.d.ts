@@ -10,6 +10,7 @@ export const toMatchFile: (
 
 declare interface FileMatcherOptions {
   diff?: DiffOptions;
+  fileExtension?: string;
 }
 
 declare global {
