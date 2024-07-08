@@ -30,6 +30,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^26.0.15",
     "@types/jest-diff": "^24.3.0",
@@ -37,8 +39,8 @@
     "conventional-changelog-cli": "^2.1.0",
     "eslint": "^7.12.1",
     "eslint-config-satya164": "^3.1.8",
-    "husky": "^4.3.0",
     "jest": "^26.6.1",
+    "lefthook": "^1.7.0",
     "prettier": "^2.1.2",
     "release-it": "^14.2.0",
     "typescript": "^4.0.5"
@@ -57,11 +59,6 @@
     "watchPathIgnorePatterns": [
       "(__fixtures__|__file_snapshots__)"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && yarn typecheck && yarn test"
-    }
   },
   "packageManager": "yarn@4.3.1"
 }
