@@ -22,7 +22,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "typescript": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "release": "release-it"
   },
   "publishConfig": {
@@ -34,7 +34,6 @@
     "@types/jest": "^26.0.15",
     "@types/jest-diff": "^24.3.0",
     "@types/mkdirp": "^1.0.1",
-    "codecov": "^3.8.0",
     "conventional-changelog-cli": "^2.1.0",
     "eslint": "^7.12.1",
     "eslint-config-satya164": "^3.1.8",
@@ -61,7 +60,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn typescript && yarn test"
+      "pre-commit": "yarn lint && yarn typecheck && yarn test"
     }
-  }
+  },
+  "packageManager": "yarn@4.3.1"
 }
