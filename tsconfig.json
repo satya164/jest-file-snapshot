@@ -1,14 +1,9 @@
-
 {
   "compilerOptions": {
-    "allowJs": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "checkJs": true,
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
     "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "node",
@@ -21,6 +16,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "verbatimModuleSyntax": true
   }
 }

@@ -21,7 +21,7 @@ it('matches binary content of file on disk', () => {
 });
 
 it('works with non-binary buffer content', () => {
-  expect(new Buffer('# this is a buffer test')).toMatchFile();
+  expect(Buffer.from('# this is a buffer test')).toMatchFile();
 });
 
 it('works with .not', () => {
