@@ -24,6 +24,7 @@ const isEqual = (a, b) => {
  * @param {string} [filepath] Path to the file to match against
  * @param {{
  *   diff?: import('jest-diff').DiffOptions,
+ *   diffMethod?: (a: string, b: string, options: import('jest-diff').DiffOptions) => string,
  *   fileExtension?: string,
  * }} options
  * @this {{ testPath: string, currentTestName: string, assertionCalls: number, isNot: boolean, snapshotState: { added: number, updated: number, unmatched: number, _updateSnapshot: 'none' | 'new' | 'all' } }}
@@ -116,10 +117,11 @@ exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
         } else {
           snapshotState.unmatched++;
 
+          const diffMethod = options.diffMethod || diff;
           const difference =
             Buffer.isBuffer(content) || Buffer.isBuffer(output)
               ? ''
-              : `\n\n${diff(output, content, options.diff)}`;
+              : `\n\n${diffMethod(output, content, options.diff)}`;
 
           return {
             pass: false,
