@@ -39,9 +39,13 @@ exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
         path.join(
           path.dirname(this.testPath),
           '__file_snapshots__',
-          `${filenamify(this.currentTestName, {
-            replacement: '-',
-          }).replace(/\s/g, '-')}-${this.assertionCalls}`
+          `${filenamify(
+            this.currentTestName,
+            {
+              replacement: '-',
+            },
+            { maxLength: Infinity }
+          ).replace(/\s/g, '-')}-${this.assertionCalls}`
         ) + fileExtension
       : filepath;
 
