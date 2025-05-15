@@ -117,6 +117,9 @@ exports.toMatchFile = function toMatchFile(content, filepath, options = {}) {
         } else {
           snapshotState.unmatched++;
 
+          mkdirp.sync(path.dirname(filename));
+          fs.writeFileSync(filename.replace('.html', '.actual.html'), content);
+
           const diffMethod = options.diffMethod || diff;
           const difference =
             Buffer.isBuffer(content) || Buffer.isBuffer(output)
